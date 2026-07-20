@@ -8,7 +8,9 @@ import livreRoute from "./routes/livreRoute.js";
 import favorisRoute from "./routes/favorisRoute.js";
 import commentaireRoute from "./routes/commentaireRoute.js";
 import historiqueRoute from "./routes/historiqueRoute.js";
+import notificationRoute from "./routes/notificationRoute.js";
 import progressionLectureRoute from "./routes/progressionLectureRoute.js";
+
 
 const app = express();
 
@@ -37,5 +39,7 @@ app.use("/api/commentaires", commentaireRoute);
 app.use("/api/progression", progressionLectureRoute);
 // Routes de l'historique
 app.use("/api/historique", historiqueRoute);
+// Routes de notification
+app.use("/api/notifications", notificationRoute);
 
 export default app;

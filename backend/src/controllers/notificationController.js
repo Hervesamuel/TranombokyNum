@@ -32,6 +32,27 @@ export const getNotificationsAuteur = async (req, res) => {
     }
 };
 
+export const getNotificationsUtilisateur = async (req, res) => {
+
+    try {
+
+        const notifications =
+            await notificationService.getNotificationsUtilisateur(
+                Number(req.params.iduser)
+            );
+
+        res.status(200).json(notifications);
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+};
+
 /*=========================================
         Marquer une notification comme lue
 ==========================================*/
