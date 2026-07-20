@@ -172,13 +172,14 @@ model Notification {
 
   datecreation DateTime @default(now())
 
+  iduser      Int
+  utilisateur Utilisateur @relation(fields: [iduser], references: [iduser])
+
   idlivre Int?
   livre   Livre? @relation(fields: [idlivre], references: [idlivre])
 
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
-  auteur            Auteur?      @relation(fields: [auteurIdaut], references: [idaut])
-  auteurIdaut       Int?
-  utilisateur       Utilisateur? @relation(fields: [utilisateurIduser], references: [iduser])
-  utilisateurIduser Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  auteur      Auteur?  @relation(fields: [auteurIdaut], references: [idaut])
+  auteurIdaut Int?
 }
