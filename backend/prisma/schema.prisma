@@ -1,0 +1,184 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  LECTEUR
+  AUTEUR
+}
+
+// CREATION DE TABLE Utilisateur DANS LE BD VIA PRISMA CLIENT
+
+model Utilisateur {
+  iduser     Int     @id @default(autoincrement())
+  nomcomplet String
+  email      String  @unique
+  mdp        String
+  photo      String?
+  genre      String
+  adresse    String
+  role       Role    @default(LECTEUR)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  favoris             Favoris[]
+  historiques         Historique[]
+  commentaires        Commentaire[]
+  notifications       Notification[]
+  progressionslecture Progressionlecture[]
+}
+
+// MODEL AUTEUR 
+model Auteur {
+  idaut         Int       @id @default(autoincrement())
+  nomcomplet    String
+  surnom        String?
+  datenaissance DateTime
+  datedece      DateTime?
+  adresse       String
+  biographie    String
+  genre         String
+  email         String    @unique
+
+  livres Livre[] // Un auteur peut écrire plusieurs livres.
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  notifications Notification[]
+}
+
+// ENUM POUR LE STATUT DU LIVRE
+enum StatutLivre {
+  EN_ATTENTE
+  VALIDE
+  REFUSE
+}
+
+// MODEL DE LIVRE
+model Livre {
+  idlivre Int @id @default(autoincrement())
+
+  // Informations du livre
+  titre     String
+  resume    String?
+  nbrpage   Int
+  datepub   DateTime
+  categorie String
+  langue    String
+
+  // Fichiers
+  couverture String?
+  fichierPdf String?
+
+  // Statut du livre
+  statut StatutLivre @default(EN_ATTENTE)
+
+  // Relation avec Auteur
+  idaut  Int
+  auteur Auteur @relation(fields: [idaut], references: [idaut])
+
+  // Dates automatiques
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  favoris             Favoris[]
+  historiques         Historique[]
+  notifications       Notification[]
+  commentaires        Commentaire[]
+  progressionslecture Progressionlecture[]
+}
+
+// MODEL DE FAVORIS
+model Favoris {
+  idfavoris Int @id @default(autoincrement())
+
+  iduser      Int
+  utilisateur Utilisateur @relation(fields: [iduser], references: [iduser])
+
+  idlivre Int
+  livre   Livre @relation(fields: [idlivre], references: [idlivre])
+
+  dateajout DateTime @default(now())
+
+  @@unique([iduser, idlivre]) // Ampeche ajoute de pluieurs fois de favoris
+}
+
+// MODEL POUR COMMENTAIRE
+
+model Commentaire {
+  idcom   Int      @id @default(autoincrement())
+  contenu String
+  datecom DateTime @default(now())
+
+  iduser      Int
+  utilisateur Utilisateur @relation(fields: [iduser], references: [iduser])
+
+  idlivre Int
+  livre   Livre @relation(fields: [idlivre], references: [idlivre])
+}
+
+// MODEL POUR Progressionlecture
+
+model Progressionlecture {
+  idprogression Int @id @default(autoincrement())
+
+  iduser      Int
+  utilisateur Utilisateur @relation(fields: [iduser], references: [iduser])
+
+  idlivre Int
+  livre   Livre @relation(fields: [idlivre], references: [idlivre])
+
+  pagecourante        Int
+  datedernierelecture DateTime @default(now())
+
+  @@unique([iduser, idlivre])
+}
+
+// MODEL POUR L'HISTORIQUE
+model Historique {
+  idhistorique Int @id @default(autoincrement())
+
+  iduser      Int
+  utilisateur Utilisateur @relation(fields: [iduser], references: [iduser])
+
+  idlivre Int
+  livre   Livre @relation(fields: [idlivre], references: [idlivre])
+
+  datelecture DateTime @default(now())
+}
+
+// MODEL POUR LA NOTIFICATION
+
+model Notification {
+  idnotification Int @id @default(autoincrement())
+
+  titre   String
+  message String
+  type    String
+  estLu   Boolean @default(false)
+
+  datecreation DateTime @default(now())
+
+  idlivre Int?
+  livre   Livre? @relation(fields: [idlivre], references: [idlivre])
+
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  auteur            Auteur?      @relation(fields: [auteurIdaut], references: [idaut])
+  auteurIdaut       Int?
+  utilisateur       Utilisateur? @relation(fields: [utilisateurIduser], references: [iduser])
+  utilisateurIduser Int?
+}
