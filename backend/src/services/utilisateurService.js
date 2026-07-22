@@ -1,4 +1,3 @@
-
 import prisma from "../config/prisma.js";
 // Importation de bcrypt (chiffrement des mots de passe)
 import bcrypt from "bcrypt";
@@ -92,4 +91,28 @@ export const loginService = async (data) => {
         utilisateur
     };
 
+};
+
+/*=========================================
+        Modifier le profil utilisateur
+==========================================*/
+export const modifierProfil = async (iduser, data, fichierPhoto) => {
+  const utilisateur = await prisma.utilisateur.findUnique({
+    where: { iduser: iduser }
+  });
+
+  if (!utilisateur) {
+    throw new Error("Utilisateur introuvable.");
+  }
+
+  return await prisma.utilisateur.update({
+    where: { iduser: iduser },
+    data: {
+      nomcomplet: data.nomcomplet,
+      genre: data.genre,
+      adresse: data.adresse,
+      // Si une nouvelle photo est envoyée, on met à jour le chemin ; sinon on garde l'ancienne
+      photo: fichierPhoto ? `/uploads/photos/${fichierPhoto.filename}` : utilisateur.photo
+    }
+  });
 };

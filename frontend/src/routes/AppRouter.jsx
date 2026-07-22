@@ -10,10 +10,16 @@ import AuteurLayout from "../layouts/AuteurLayout";
 // Pages publiques
 import Accueil from "../pages/Accueil";
 import Connexion from "../pages/Connexion";
+import Inscription from "../pages/Inscription";
+import Catalogue from "../pages/Catalogue";
+import Profil from "../pages/Profil";
+import LivreDetail from "../pages/LivreDetail";
+
 
 // Dashboards
 import Admin from "../pages/admin";
 import Auteur from "../pages/auteur";
+
 
 function AppRouter() {
   return (
@@ -23,13 +29,16 @@ function AppRouter() {
         <Route element={<MainLayout />}>
           <Route index element={<Accueil />} />
           <Route path="connexion" element={<Connexion />} />
-          {/* <Route path="inscription" element={<Inscription />} /> */}
-          {/* <Route path="catalogue" element={<Catalogue />} /> */}
+          <Route path="inscription" element={<Inscription />} />
+          <Route path="profil" element={<Profil />} />
+          <Route path="catalogue" element={<Catalogue />} />
+          <Route path="/livre/:id" element={<LivreDetail/>}/>          
+          
           {/* <Route path="livre/:id" element={<DetailLivre />} /> */}
 
           {/* ===== Routes protégées : tout utilisateur connecté ===== */}
           {/* <Route element={<ProtectedRoute rolesAutorises={[ROLES.ADMIN, ROLES.AUTEUR, ROLES.LECTEUR]} />}> */}
-          {/*   <Route path="profil" element={<Profil />} /> */}
+        
           {/*   <Route path="favoris" element={<Favoris />} /> */}
           {/*   <Route path="historique" element={<Historique />} /> */}
           {/*   <Route path="notifications" element={<Notifications />} /> */}

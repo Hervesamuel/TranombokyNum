@@ -1,8 +1,11 @@
+import { register } from "../services/authService";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useToast } from "../contexts/ToastContext";
 import { ROLES } from "../utils/roles";
+import SelecteurPhoto from "../components/common/SelecteurPhoto";
+
 
 const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -16,6 +19,7 @@ function Inscription() {
     adresse: "",
     role: ROLES.LECTEUR, // valeur par défaut
   });
+  const [photo, setPhoto] = useState(null);
   const [erreurs, setErreurs] = useState({});
   const [envoiEnCours, setEnvoiEnCours] = useState(false);
 
@@ -50,26 +54,30 @@ function Inscription() {
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = async () => {
-    if (!valider()) return;
+ const handleSubmit = async () => {
+  if (!valider()) return;
 
-    setEnvoiEnCours(true);
-    try {
-      // On ne renvoie pas confirmationMdp au backend, ce n'est qu'un contrôle frontend
-      const { confirmationMdp, ...donneesAEnvoyer } = form;
-      await connexion; // (pas utilisé ici, l'inscription se fait via authService plus bas)
+  setEnvoiEnCours(true);
+  try {
+    const donneesForm = new FormData();
+    donneesForm.append("nomcomplet", form.nomcomplet);
+    donneesForm.append("email", form.email);
+    donneesForm.append("mdp", form.mdp);
+    donneesForm.append("genre", form.genre);
+    donneesForm.append("adresse", form.adresse);
+    donneesForm.append("role", form.role);
+    if (photo) donneesForm.append("photo", photo);
 
-      const authService = await import("../services/authService");
-      await authService.register(donneesAEnvoyer);
+    await register(donneesForm);
 
-      afficherToast("Compte créé avec succès, connectez-vous", "succes");
-      navigate("/connexion");
-    } catch (err) {
-      afficherToast(err.response?.data?.message || "Erreur lors de l'inscription", "erreur");
-    } finally {
-      setEnvoiEnCours(false);
-    }
-  };
+    afficherToast("Compte créé avec succès, connectez-vous", "succes");
+    navigate("/connexion");
+  } catch (err) {
+    afficherToast(err.response?.data?.message || "Erreur lors de l'inscription", "erreur");
+  } finally {
+    setEnvoiEnCours(false);
+  }
+};
 
   // Style réutilisé pour tous les inputs (cohérence + code court)
   const styleInput = (champErreur) => ({
@@ -83,7 +91,7 @@ function Inscription() {
   return (
     <div style={{ maxWidth: 440, margin: "48px auto", padding: 32, borderRadius: 12, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
       <h2 style={{ color: "#1e3a8a", marginBottom: 24 }}>Créer un compte</h2>
-
+      <SelecteurPhoto onChangeFichier={setPhoto} />
       <label style={{ display: "block", marginBottom: 4, fontSize: 14, color: "#374151" }}>Nom complet</label>
       <input
         type="text"
