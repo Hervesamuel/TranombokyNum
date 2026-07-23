@@ -14,7 +14,7 @@ import Inscription from "../pages/Inscription";
 import Catalogue from "../pages/Catalogue";
 import Profil from "../pages/Profil";
 import LivreDetail from "../pages/LivreDetail";
-
+import Favoris from "../pages/Favoris";
 
 // Dashboards
 import Admin from "../pages/admin";
@@ -32,7 +32,8 @@ function AppRouter() {
           <Route path="inscription" element={<Inscription />} />
           <Route path="profil" element={<Profil />} />
           <Route path="catalogue" element={<Catalogue />} />
-          <Route path="/livre/:id" element={<LivreDetail/>}/>          
+          <Route path="/livre/:id" element={<LivreDetail/>}/>
+          <Route path="/favoris"element={<Favoris />}/>          
           
           {/* <Route path="livre/:id" element={<DetailLivre />} /> */}
 

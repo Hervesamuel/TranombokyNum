@@ -1,8 +1,32 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { getLivreParId } from "../services/LivreService";
+import { ajouterFavori } from "../services/favorisService";
+
+
 
 function LivreDetail() {
+
+
+const handleAjouterFavori = async () => {
+  try {
+
+    await ajouterFavori(livre.idlivre);
+
+    alert("❤️ Livre ajouté aux favoris.");
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert(
+      error.response?.data?.message ||
+      "Impossible d'ajouter ce livre."
+    );
+
+  }
+};
+
   const { id } = useParams();
   const navigate = useNavigate();
   const [livre, setLivre] = useState(null);
@@ -28,6 +52,8 @@ function LivreDetail() {
   if (chargement) return <h2 style={{ textAlign: "center", marginTop: "50px" }}>Chargement...</h2>;
   if (!livre) return <h2 style={{ textAlign: "center", marginTop: "50px" }}>Livre introuvable.</h2>;
 
+
+  
   return (
     <div style={{ maxWidth: "1200px", margin: "40px auto", padding: "30px" }}>
       <button onClick={() => navigate(-1)} style={{ padding: "10px 20px", marginBottom: "25px", border: "none", borderRadius: "8px", background: "#1e3a8a", color: "white", cursor: "pointer" }}>← Retour</button>
@@ -44,7 +70,7 @@ function LivreDetail() {
           <h3>Résumé</h3>
           <p style={{ textAlign: "justify", lineHeight: "1.8" }}>{livre.resume}</p>
           <div style={{ display: "flex", gap: "20px", marginTop: "35px" }}>
-            <button style={{ background: "#dc2626", color: "white", border: "none", padding: "12px 25px", borderRadius: "8px", cursor: "pointer" }}>❤️ Ajouter aux favoris</button>
+            <button onClick={handleAjouterFavori} style={{ background: "#dc2626", color: "white", border: "none", padding: "12px 25px", borderRadius: "8px", cursor: "pointer" }}>❤️ Ajouter aux favoris</button>
             <Link to={`/lecture/${livre.idlivre}`}>
               <button style={{ background: "#15803d", color: "white", border: "none", padding: "12px 25px", borderRadius: "8px", cursor: "pointer" }}>📖 Lire maintenant</button>
             </Link>
@@ -53,6 +79,7 @@ function LivreDetail() {
       </div>
     </div>
   );
+  
 }
 
 export default LivreDetail;
