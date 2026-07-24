@@ -16,6 +16,7 @@ import Profil from "../pages/Profil";
 import LivreDetail from "../pages/LivreDetail";
 import Favoris from "../pages/Favoris";
 
+
 // Dashboards
 import Admin from "../pages/admin";
 import Auteur from "../pages/auteur";
@@ -33,7 +34,9 @@ function AppRouter() {
           <Route path="profil" element={<Profil />} />
           <Route path="catalogue" element={<Catalogue />} />
           <Route path="/livre/:id" element={<LivreDetail/>}/>
-          <Route path="/favoris"element={<Favoris />}/>          
+          <Route path="/favoris"element={<Favoris />}/>      
+          <Route index element={<Auteur />} />
+
           
           {/* <Route path="livre/:id" element={<DetailLivre />} /> */}
 

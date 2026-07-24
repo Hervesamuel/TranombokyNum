@@ -6,15 +6,13 @@ import * as livreService from "../services/livreService.js";
 ==========================================*/
 export const ajouterLivre = async (req, res) => {
     try {
-        const livre = await livreService.ajouterLivre(req.body);
+        const data = { ...req.body, couverture: req.files?.couverture?.[0]?.filename || null, fichierPdf: req.files?.fichierPdf?.[0]?.filename || null };
+        const livre = await livreService.ajouterLivre(data);
         res.status(201).json(livre);
     } catch (error) {
-        res.status(400).json({
-            message: error.message
-        });
+        res.status(400).json({ message: error.message });
     }
 };
-
 /*=========================================
         Obtenir tous les livres
 ==========================================*/
@@ -50,18 +48,13 @@ export const getLivreParId = async (req, res) => {
 ==========================================*/
 export const modifierLivre = async (req, res) => {
     try {
-        const livre = await livreService.modifierLivre(
-            Number(req.params.id),
-            req.body
-        );
+        const data = { ...req.body, couverture: req.files?.couverture?.[0]?.filename, fichierPdf: req.files?.fichierPdf?.[0]?.filename };
+        const livre = await livreService.modifierLivre(Number(req.params.id), data);
         res.status(200).json(livre);
     } catch (error) {
-        res.status(400).json({
-            message: error.message
-        });
+        res.status(400).json({ message: error.message });
     }
 };
-
 /*=========================================
         Supprimer un livre
 ==========================================*/

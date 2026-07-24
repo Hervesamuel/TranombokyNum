@@ -15,6 +15,7 @@ import {
 // Importation des Middlewares
 import authMiddleware from "../middleware/authMiddleware.js";
 import roleMiddleware from "../middleware/roleMiddleware.js";
+import uploadLivre from "../middleware/uploadLivre.js";
 
 // Création du Router
 const router = express.Router();
@@ -23,13 +24,7 @@ const router = express.Router();
         Ajouter un livre
         (AUTEUR ou ADMIN)
 ==========================================*/
-router.post(
-    "/",
-    authMiddleware,
-    roleMiddleware("AUTEUR", "ADMIN"),
-    ajouterLivre
-);
-
+router.post("/", authMiddleware, roleMiddleware("AUTEUR", "ADMIN"), uploadLivre.fields([{ name: "couverture", maxCount: 1 }, { name: "fichierPdf", maxCount: 1 }]), ajouterLivre);
 /*=========================================
         Liste des livres
 ==========================================*/
@@ -50,12 +45,7 @@ router.get(
         Modifier un livre
         (AUTEUR ou ADMIN)
 ==========================================*/
-router.put(
-    "/:id",
-    authMiddleware,
-    roleMiddleware("AUTEUR", "ADMIN"),
-    modifierLivre
-);
+router.put("/:id", authMiddleware, roleMiddleware("AUTEUR", "ADMIN"), uploadLivre.fields([{ name: "couverture", maxCount: 1 }, { name: "fichierPdf", maxCount: 1 }]), modifierLivre);
 
 /*=========================================
         Supprimer un livre
@@ -89,6 +79,5 @@ router.put(
     roleMiddleware("ADMIN"),
     refuserLivre
 );
-
 
 export default router;

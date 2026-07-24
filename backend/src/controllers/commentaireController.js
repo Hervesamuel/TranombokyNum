@@ -1,6 +1,4 @@
-
 import * as commentaireService from "../services/commentaireService.js";
-
 /*=========================================
         Ajouter un commentaire
 ==========================================*/
